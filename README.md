@@ -19,16 +19,19 @@ Note that an Xcode .xip install archive is required to perform Xcode installatio
 ### Test and anlayse a project
 Add and configure a sonar-project.properties as explained [here](https://github.com/Backelite/sonar-swift)
 
-Then use the following .gitlab-ci.yml file to run the build / test / analysis (and publication to SonarQube):
+Then use the following **.gitlab-ci.yml** file to perform a code analysis (and publication to SonarQube):
 
     analyse:
       tags:
         - xcode11
       script:
         - pod install
+        - start-simulator.sh "iPhone 11 Pro"
         - run-sonar-swift.sh -sonarurl=$SONAR_URL -sonarlogin=$SONAR_TOKEN
   
-  SONAR_URL and SONAR_TOKEN are defined as GitLab CI/CD variables
+**start-simulator.sh** pre-launches the simulator for tests. Be careful to use the same simulator as the one defined in you **sonar-project.properties**.
+
+**run-sonar-swift.sh** builds, tests, analyses and publishes results to a SonarQube server. **SONAR_URL** and **SONAR_TOKEN** are defined as GitLab CI/CD variables.
 
 ## What's in the box ?
 
