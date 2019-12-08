@@ -93,7 +93,7 @@ Here is a list of available parameters
 | GITLAB_REGISTRATION_TOKEN | none (mandatory)     |
 | GITLAB_RUNNER_NAME        | none (mandatory)     |
 | GITLAB_RUNNER_TAGS        | none (mandatory)     |
-| CPU_COUNT                 | 4                    |
+| CPU_COUNT                 | 2                    |
 | RAM_SIZE                  | 4096                 |
 
 ## Reminder : OS X Licensing
