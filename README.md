@@ -38,6 +38,7 @@ Then use the following **.gitlab-ci.yml** file to perform a code analysis (and p
 Here is a list of tools included in the box :
 - Xcode
 - fastlane
+- flutter
 - sonar-swift
 - sonar-scanner
 - xcpretty

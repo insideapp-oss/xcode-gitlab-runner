@@ -156,8 +156,14 @@ Vagrant.configure("2") do |config|
   SHELL
 
   # swiftlint (require Xcode to be installed)
-    config.vm.provision "shell", privileged: false, name: 'swiftlint installation', inline: <<-SHELL
+  config.vm.provision "shell", privileged: false, name: 'swiftlint installation', inline: <<-SHELL
     /usr/local/bin/brew install swiftlint
+  SHELL
+
+  # flutter (require Xcode to be installed)
+  config.vm.provision "shell", privileged: false, name: 'flutter installation', inline: <<-SHELL
+    /usr/local/bin/brew tap MiderWong/flutter
+    /usr/local/bin/brew install flutter 
   SHELL
 
   # Cocoapods repository setup
