@@ -11,7 +11,7 @@ GITLAB_URL=ENV['GITLAB_URL'] || "https://gitlab.com/"
 GITLAB_REGISTRATION_TOKEN=ENV['GITLAB_REGISTRATION_TOKEN']
 GITLAB_RUNNER_NAME=ENV['GITLAB_RUNNER_NAME']
 GITLAB_RUNNER_TAGS=ENV['GITLAB_RUNNER_TAGS']
-CPU_COUNT=ENV['CPU_COUNT'] || 4
+CPU_COUNT=ENV['CPU_COUNT'] || 2
 RAM_SIZE=ENV['RAM_SIZE'] || 4096
 
 Vagrant.configure("2") do |config|
@@ -156,8 +156,14 @@ Vagrant.configure("2") do |config|
   SHELL
 
   # swiftlint (require Xcode to be installed)
-    config.vm.provision "shell", privileged: false, name: 'swiftlint installation', inline: <<-SHELL
+  config.vm.provision "shell", privileged: false, name: 'swiftlint installation', inline: <<-SHELL
     /usr/local/bin/brew install swiftlint
+  SHELL
+
+  # flutter (require Xcode to be installed)
+  config.vm.provision "shell", privileged: false, name: 'flutter installation', inline: <<-SHELL
+    /usr/local/bin/brew tap MiderWong/flutter
+    /usr/local/bin/brew install flutter 
   SHELL
 
   # Cocoapods repository setup

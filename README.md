@@ -38,6 +38,7 @@ Then use the following **.gitlab-ci.yml** file to perform a code analysis (and p
 Here is a list of tools included in the box :
 - Xcode
 - fastlane
+- flutter
 - sonar-swift
 - sonar-scanner
 - xcpretty
@@ -93,7 +94,7 @@ Here is a list of available parameters
 | GITLAB_REGISTRATION_TOKEN | none (mandatory)     |
 | GITLAB_RUNNER_NAME        | none (mandatory)     |
 | GITLAB_RUNNER_TAGS        | none (mandatory)     |
-| CPU_COUNT                 | 4                    |
+| CPU_COUNT                 | 2                    |
 | RAM_SIZE                  | 4096                 |
 
 ## Reminder : OS X Licensing
