@@ -108,7 +108,7 @@ Vagrant.configure("2") do |config|
 
   # sonar-swift script
     config.vm.provision "shell", privileged: true, name: 'sonar-swift script', env: {"SONAR_PUBLIC_REPOSITORY" => "sonar-swift"}, inline: <<-SHELL
-    git clone -b master https://github.com/Backelite/$SONAR_PUBLIC_REPOSITORY.git ~/$SONAR_PUBLIC_REPOSITORY
+    git clone -b master https://github.com/insideapp-oss/$SONAR_PUBLIC_REPOSITORY.git ~/$SONAR_PUBLIC_REPOSITORY
     cd ~/$SONAR_PUBLIC_REPOSITORY
     git checkout develop
     mv ~/$SONAR_PUBLIC_REPOSITORY/sonar-swift-plugin/src/main/shell/ /usr/local/opt/$SONAR_PUBLIC_REPOSITORY
