@@ -17,15 +17,16 @@ RAM_SIZE=ENV['RAM_SIZE'] || 4096
 Vagrant.configure("2") do |config|
   
   # Get box
-  config.vm.box = "leav3/macos_mojave"
+  config.vm.box = "BeTomorrow/macos-bigsur-intel"
 
   # Configuration
   config.vm.provider 'virtualbox' do |vb|
     vb.customize ["modifyvm", :id, "--ostype", "MacOS_64"]
     vb.customize ["modifyvm", :id, "--ioapic", "on"]
-    vb.customize ["modifyvm", :id, "--nestedpaging", "off"]
+    vb.customize ["modifyvm", :id, "--nestedpaging", "on"]
+    vb.customize ["modifyvm", :id, "--largepages", "on"]
     vb.gui = false
-    vb.name = 'mojave-xcode'
+    vb.name = 'bigsur-xcode'
     vb.cpus = "#{CPU_COUNT}"
     vb.memory = "#{RAM_SIZE}"
     config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -53,7 +54,9 @@ Vagrant.configure("2") do |config|
 
   # Disable sleep mode
   config.vm.provision "shell", privileged: false, name: 'disable sleep mode', inline: <<-SHELL
-    sudo systemsetup -setcomputersleep Never
+    sudo pmset -a sleep 0
+    sudo pmset -a hibernatemode 0
+    sudo pmset -a disablesleep 1
   SHELL
 
   # Developer mode activation
@@ -72,18 +75,19 @@ Vagrant.configure("2") do |config|
 
   # Install brew
   config.vm.provision "shell", privileged: false, name: 'homebrew with command line tools', inline: <<-SHELL
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   SHELL
 
   # Install command line tools with brew
   config.vm.provision "shell", privileged: false, name: 'brew tools', inline: <<-SHELL
     /usr/local/bin/brew tap oclint/formulae
-    /usr/local/bin/brew install xz ruby wget gcovr doxygen graphviz sonar-scanner carthage python@2 imagemagick ghostscript oclint
+    /usr/local/bin/brew install xz ruby wget gcovr doxygen graphviz sonar-scanner carthage imagemagick ghostscript oclint
   SHELL
 
-  # Install brew tools path
-  config.vm.provision "shell", privileged: true, name: 'brew tools path', inline: <<-SHELL
-    echo export PATH=/usr/local/opt/python@2/libexec/bin:\$PATH >> /etc/profile
+  # Install pip
+  config.vm.provision "shell", privileged: true, name: 'pip', inline: <<-SHELL
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
+    echo export PATH=\~/Library/Python/2.7/bin:\$PATH >> /etc/profile
   SHELL
 
   # Install Lizard
@@ -107,7 +111,7 @@ Vagrant.configure("2") do |config|
   SHELL
 
   # sonar-swift script
-    config.vm.provision "shell", privileged: true, name: 'sonar-swift script', env: {"SONAR_PUBLIC_REPOSITORY" => "sonar-swift"}, inline: <<-SHELL
+  config.vm.provision "shell", privileged: true, name: 'sonar-swift script', env: {"SONAR_PUBLIC_REPOSITORY" => "sonar-swift"}, inline: <<-SHELL
     git clone -b master https://github.com/insideapp-oss/$SONAR_PUBLIC_REPOSITORY.git ~/$SONAR_PUBLIC_REPOSITORY
     cd ~/$SONAR_PUBLIC_REPOSITORY
     git checkout develop
@@ -118,13 +122,13 @@ Vagrant.configure("2") do |config|
   SHELL
 
   # Install java
-    config.vm.provision "shell", privileged: false, name: 'java', inline: <<-SHELL
-    /usr/local/bin/brew tap caskroom/versions
-    /usr/local/bin/brew cask install java
+  config.vm.provision "shell", privileged: false, name: 'java', inline: <<-SHELL
+    /usr/local/bin/brew tap adoptopenjdk/openjdk
+    /usr/local/bin/brew install adoptopenjdk14
   SHELL
 
   # Enable auto login
-    config.vm.provision "shell", privileged: false, name: 'enable auto login', inline: <<-SHELL
+  config.vm.provision "shell", privileged: false, name: 'enable auto login', inline: <<-SHELL
     /usr/local/bin/brew tap xfreebird/utils
     /usr/local/bin/brew install kcpassword
     enable_autologin "${USERNAME}" "${USERNAME}"
@@ -135,7 +139,8 @@ Vagrant.configure("2") do |config|
 
   # Xcode
   config.vm.provision "shell", privileged: false, name: 'xcode installation', inline: <<-SHELL
-      open -FWga "Archive Utility" --args /tmp/Xcode.xip
+      cd ~/Downloads
+      xip --expand /tmp/Xcode.xip
       # Move Xcode to Applications directory
       sudo mv ~/Downloads/Xcode.app /Applications/
       # Clean Xcode installation file
@@ -143,7 +148,7 @@ Vagrant.configure("2") do |config|
       # Accept Xcode licence
       sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
       sudo xcodebuild -license accept
-      # Install XCode additional required components
+      # Install Xcode additional required components
       for pkg in /Applications/Xcode.app/Contents/Resources/Packages/*.pkg; do sudo installer -pkg "$pkg" -target /; done
   SHELL
 
@@ -162,7 +167,6 @@ Vagrant.configure("2") do |config|
 
   # flutter (require Xcode to be installed)
   config.vm.provision "shell", privileged: false, name: 'flutter installation', inline: <<-SHELL
-    /usr/local/bin/brew tap MiderWong/flutter
     /usr/local/bin/brew install flutter 
   SHELL
 

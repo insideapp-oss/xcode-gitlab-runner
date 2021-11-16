@@ -4,6 +4,10 @@ A Vagrantfile to build a fully functional macOS / Xcode GitLab runner
 
 ## TL;DR
 
+### Releases
+
+Have a look a the repository branches to select the desired macOS version.
+
 ### Build and run the runner
 Once VirtualBox and Vagrant are installed, use the following command to build and run the box :
 
@@ -45,7 +49,6 @@ Here is a list of tools included in the box :
 - gcovr
 - CocoaPods
 - Carthage
-- XCode
 - slather
 - OCLint
 - SwiftLint
@@ -61,8 +64,8 @@ VirtualBox can be downloaded from [here](https://www.virtualbox.org/).
 
 Or installed using [Homebrew](https://brew.sh/): 
 
-    brew cask install virtualbox
-    brew cask install virtualbox-extension-pack
+    brew --cask install virtualbox
+    brew --cask install virtualbox-extension-pack
 
 ### Vagrant
 
@@ -70,7 +73,7 @@ Vagrant and its reload plugin are required to run the Vagrantfile.
 
 It can be installed using [Homebrew](https://brew.sh/):
 
-    brew cask install vagrant
+    brew install vagrant
     vagrant plugin install vagrant-reload
 
 ### Xcode .xip file
